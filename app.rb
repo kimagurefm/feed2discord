@@ -24,7 +24,7 @@ entries.each do |entry|
 
   message = <<~MESSAGE
     :bell: 新着エピソード :bell:
-    お聞きになったら、ぜひ感想をお寄せください
+    よかったら感想を教えてください！
     #{entry.url}
   MESSAGE
 
