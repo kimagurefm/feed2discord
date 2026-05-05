@@ -10,6 +10,13 @@ feed_url = ENV["FEED_URL"]
 webhook_url = ENV["WEBHOOK_URL"]
 
 already_notified = File.read("already_notified.txt").split("\n")
+
+# Spotify/AnchorのRSSはVarnish 3層CDNでキャッシュされる(s-maxage=7日)。
+# クエリパラメータやCache-Controlヘッダはedge側で正規化・無視されるため効かない。
+# 1回目で古いキャッシュを持つPOPがoriginにリフレッシュをかけ、
+# 2回目で新しいキャッシュが返ってくる挙動があるので、ウォームアップ後に本命を取得する。
+Faraday.get(feed_url)
+sleep 2
 feed = Feedjira.parse(Faraday.get(feed_url).body)
 entries = feed.entries.sort_by(&:published).reverse
 
