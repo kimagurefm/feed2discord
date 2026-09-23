@@ -37,7 +37,7 @@ entries.each do |entry|
 
   puts message
   puts
-  Faraday.post(webhook_url, { content: message })
+  Faraday.post(webhook_url, { content: message }) unless ENV["DRY_RUN"]
 
   already_notified.push(url)
 end
